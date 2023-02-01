@@ -1,6 +1,7 @@
 package ru.ibs.framework.steps;
 
 import io.cucumber.java.ru.И;
+import org.openqa.selenium.NoSuchElementException;
 import ru.ibs.framework.managers.PageManager;
 import ru.ibs.framework.pages.DepositPage;
 
@@ -19,9 +20,19 @@ public class DepositPageStep {
         pageManager.getPage(DepositPage.class).depositValueInput(value);
     }
 
+    @И("Проверить соответствие актуального в поле \"Сумма\" значения введённому значению {string}:")
+    public void checkValueField(String expected) {
+        pageManager.getPage(DepositPage.class).checkValueField(expected);
+    }
+
     @И("Выбрать {string} в поле \"Срок\":")
     public void depositPeriodChoosing(String period) {
         pageManager.getPage(DepositPage.class).depositPeriodChoosing(period);
+    }
+
+    @И("Проверить соответствие актуального в поле \"Срок\" значения выбранному значению {string}:")
+    public void checkPeriodField(String expected) {
+        pageManager.getPage(DepositPage.class).checkPeriodField(expected);
     }
 
     @И("Выбрать {string} в выпадающем списке поля \"Тип вклада\":")
@@ -29,9 +40,24 @@ public class DepositPageStep {
         pageManager.getPage(DepositPage.class).depositTypeChoosing(type);
     }
 
+    @И("Проверить соответствие актуального в поле \"Тип вклада\" значения выбранному значению {string}:")
+    public void checkTypeField(String expected) {
+        pageManager.getPage(DepositPage.class).checkTypeField(expected);
+    }
+
     @И("Выбрать банки в выпадающем списке поля \"Банки\":")
     public void bankChoosing(List<String> banks) {
         pageManager.getPage(DepositPage.class).bankChoosing(banks);
+    }
+
+    @И("Проверить состояния чекбоксов выбранных банков:")
+    public void checkSelectedBanks(List<String> expectedBanks) {
+        pageManager.getPage(DepositPage.class).checkSelectedBanks(expectedBanks);
+    }
+
+    @И("Проверить состояния чекбоксов выбора дополнительных опций:")
+    public void checkSelectedAdditionals(List<String> additionals) {
+        pageManager.getPage(DepositPage.class).checkSelectedAdditionals(additionals);
     }
 
     @И("Выбрать дополнительные опции:")
@@ -40,7 +66,6 @@ public class DepositPageStep {
     }
 
     @И("Нажать кнопку \"Показать\"")
-
     public void clickShowButton() {
         pageManager.getPage(DepositPage.class).clickShowButton();
     }

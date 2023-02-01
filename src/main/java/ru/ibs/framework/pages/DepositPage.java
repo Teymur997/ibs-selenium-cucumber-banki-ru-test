@@ -21,6 +21,9 @@ public class DepositPage extends BasePage {
     @FindBy(xpath = "//div[@data-placement]//li")
     private List<WebElement> dropDownList;
 
+    @FindBy(xpath = "//ul[@class=\"sc-jUEnpm gXySZn\"]//li")
+    private List<WebElement> checkedBanks;
+
     @FindBy(xpath = "//button[@class=\"sc-eCssSg xVSDo\"]")
     private WebElement settingsButton;
 
@@ -58,6 +61,16 @@ public class DepositPage extends BasePage {
         return pageManager.getPage(DepositPage.class);
     }
 
+    public DepositPage checkValueField(String expected) {
+        String actual = depositInputFields.stream()
+                .filter(element -> element.findElement(By.xpath(".//following-sibling::label"))
+                        .getText().contains("Сумма"))
+                .findAny()
+                .get().getAttribute("value");
+        Assertions.assertEquals(expected, actual, "Значение в поле \"Сумма\" не равно введенному значению " + expected);
+        return pageManager.getPage(DepositPage.class);
+    }
+
     public DepositPage depositPeriodChoosing(String period) {
         WebElement periodDropDownField = depositInputFields.stream()
                 .filter(element -> element.findElement(By.xpath(".//following-sibling::label"))
@@ -76,6 +89,17 @@ public class DepositPage extends BasePage {
         return pageManager.getPage(DepositPage.class);
     }
 
+    public DepositPage checkPeriodField(String expected) {
+        String actual = depositInputFields.stream()
+                .filter(element -> element.findElement(By.xpath(".//following-sibling::label"))
+                        .getText().contains("Срок"))
+                .map(element -> element.findElement(By.xpath(".//following-sibling::div[@data-test=\"dropdown\"]")))
+                .findAny()
+                .get().getText();
+        Assertions.assertEquals(expected, actual, "Значение в поле \"Срок\" не равно выбранному значению \"" + expected + "\"");
+        return pageManager.getPage(DepositPage.class);
+    }
+
     public DepositPage depositTypeChoosing(String type) {
         WebElement depositTypeDropDownField = depositInputFields.stream()
                 .filter(element -> element.findElement(By.xpath(".//following-sibling::label"))
@@ -90,6 +114,17 @@ public class DepositPage extends BasePage {
                 .get()
                 .click();
         waitForStability(2000, 250);
+        return pageManager.getPage(DepositPage.class);
+    }
+
+    public DepositPage checkTypeField(String expected) {
+        String actual = depositInputFields.stream()
+                .filter(element -> element.findElement(By.xpath(".//following-sibling::label"))
+                        .getText().contains("Тип вклада"))
+                .map(element -> element.findElement(By.xpath(".//following-sibling::div[@data-test=\"dropdown\"]")))
+                .findAny()
+                .get().getText();
+        Assertions.assertEquals(expected, actual, "Значение в поле \"Тип вклада\" не равно выбранному значению \"" + expected + "\"");
         return pageManager.getPage(DepositPage.class);
     }
 
@@ -113,6 +148,23 @@ public class DepositPage extends BasePage {
         return pageManager.getPage(DepositPage.class);
     }
 
+    public DepositPage checkSelectedBanks(List<String> expectedBanks) {
+        WebElement banksDropDownField = depositInputFields.stream()
+                .filter(element -> element.findElement(By.xpath(".//following-sibling::label"))
+                        .getText().contains("Банки"))
+                .map(element -> element.findElement(By.xpath(".//..")))
+                .findAny()
+                .get();
+        banksDropDownField.click();
+        for (String bankName : expectedBanks) {
+            boolean isBankChoosed = checkedBanks.stream()
+                    .anyMatch(element -> element.getText().contains(bankName));
+            Assertions.assertTrue(isBankChoosed, "Банк \"" + bankName + "\"не выбран");
+        }
+        banksDropDownField.click();
+        return pageManager.getPage(DepositPage.class);
+    }
+
     public DepositPage additionalsChoosing(List<String> additionals) {
         for (String additional : additionals) {
             WebElement checkBox = depositCheckbox.stream()
@@ -122,6 +174,20 @@ public class DepositPage extends BasePage {
             checkBox.click();
         }
         waitForStability(2000, 250);
+        return pageManager.getPage(DepositPage.class);
+    }
+
+    public DepositPage checkSelectedAdditionals(List<String> additionals) {
+        for (String additional : additionals) {
+            WebElement checkBox = depositCheckbox.stream()
+                    .filter(element -> element.getText().contains(additional))
+                    .findAny()
+                    .get();
+            boolean isAdditionalChecked = checkBox.findElement(By.xpath(".//preceding-sibling::input"))
+                    .getAttribute("checked")
+                    .contains("true");
+            Assertions.assertTrue(isAdditionalChecked, "Дополнительная опция \"" + additional + "\" не выбрана");
+        }
         return pageManager.getPage(DepositPage.class);
     }
 
