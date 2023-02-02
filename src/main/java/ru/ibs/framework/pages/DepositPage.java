@@ -12,6 +12,10 @@ import java.util.List;
 public class DepositPage extends BasePage {
     @FindBy(xpath = "//div[@class=\"sc-hBEYos czEoCN\"]")
     private WebElement cashBackWindow;
+
+    @FindBy(xpath = "//div[@class=\"sc-idOhPF oCZyr\"]")
+    private WebElement settingsWindow;
+
     @FindBy(xpath = "//div[@class=\"SearchModal__StyledBody-sc-wuz0ak-1 eQdrBU\"]//input")
     private List<WebElement> depositInputFields;
 
@@ -48,6 +52,7 @@ public class DepositPage extends BasePage {
 
     public DepositPage clickDepositSettingsButton() {
         settingsButton.click();
+        waitUntilElementIsVisible(settingsWindow);
         return pageManager.getPage(DepositPage.class);
     }
 
@@ -137,11 +142,15 @@ public class DepositPage extends BasePage {
                 .get();
         banksDropDownField.click();
         for (String bankName : banks) {
-            WebElement bank = dropDownList.stream()
-                    .filter(element -> element.getText().contains(bankName))
-                    .findAny()
-                    .get();
-            bank.click();
+            if (bankName != null) {
+                WebElement bank = dropDownList.stream()
+                        .filter(element -> element.getText().contains(bankName))
+                        .findAny()
+                        .get();
+                bank.click();
+            } else {
+                break;
+            }
         }
         banksDropDownField.click();
         waitForStability(2000, 250);
@@ -157,9 +166,13 @@ public class DepositPage extends BasePage {
                 .get();
         banksDropDownField.click();
         for (String bankName : expectedBanks) {
-            boolean isBankChoosed = checkedBanks.stream()
-                    .anyMatch(element -> element.getText().contains(bankName));
-            Assertions.assertTrue(isBankChoosed, "Банк \"" + bankName + "\"не выбран");
+            if (bankName != null) {
+                boolean isBankChoosed = checkedBanks.stream()
+                        .anyMatch(element -> element.getText().contains(bankName));
+                Assertions.assertTrue(isBankChoosed, "Банк \"" + bankName + "\"не выбран");
+            } else {
+                break;
+            }
         }
         banksDropDownField.click();
         return pageManager.getPage(DepositPage.class);
@@ -167,11 +180,15 @@ public class DepositPage extends BasePage {
 
     public DepositPage additionalsChoosing(List<String> additionals) {
         for (String additional : additionals) {
-            WebElement checkBox = depositCheckbox.stream()
-                    .filter(element -> element.getText().contains(additional))
-                    .findAny()
-                    .get();
-            checkBox.click();
+            if (additional != null) {
+                WebElement checkBox = depositCheckbox.stream()
+                        .filter(element -> element.getText().contains(additional))
+                        .findAny()
+                        .get();
+                checkBox.click();
+            } else {
+                break;
+            }
         }
         waitForStability(2000, 250);
         return pageManager.getPage(DepositPage.class);
@@ -179,14 +196,18 @@ public class DepositPage extends BasePage {
 
     public DepositPage checkSelectedAdditionals(List<String> additionals) {
         for (String additional : additionals) {
-            WebElement checkBox = depositCheckbox.stream()
-                    .filter(element -> element.getText().contains(additional))
-                    .findAny()
-                    .get();
-            boolean isAdditionalChecked = checkBox.findElement(By.xpath(".//preceding-sibling::input"))
-                    .getAttribute("checked")
-                    .contains("true");
-            Assertions.assertTrue(isAdditionalChecked, "Дополнительная опция \"" + additional + "\" не выбрана");
+            if (additional != null) {
+                WebElement checkBox = depositCheckbox.stream()
+                        .filter(element -> element.getText().contains(additional))
+                        .findAny()
+                        .get();
+                boolean isAdditionalChecked = checkBox.findElement(By.xpath(".//preceding-sibling::input"))
+                        .getAttribute("checked")
+                        .contains("true");
+                Assertions.assertTrue(isAdditionalChecked, "Дополнительная опция \"" + additional + "\" не выбрана");
+            } else {
+                break;
+            }
         }
         return pageManager.getPage(DepositPage.class);
     }
