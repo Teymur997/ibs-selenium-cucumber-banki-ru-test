@@ -4,7 +4,7 @@ import io.cucumber.java.ru.И;
 import ru.ibs.framework.managers.PageManager;
 import ru.ibs.framework.pages.blocks.MenuBlockPage;
 
-public class MenuBlockPageStep {
+public class MenuBlockPageSteps {
     PageManager pageManager = PageManager.getInstance();
 
     @И("Проверить корректность открытия страницы")

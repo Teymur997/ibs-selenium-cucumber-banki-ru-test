@@ -137,17 +137,18 @@ public class DepositPage extends BasePage {
         WebElement banksDropDownField = depositInputFields.stream()
                 .filter(element -> element.findElement(By.xpath(".//following-sibling::label"))
                         .getText().contains("Банки"))
-                .map(element -> element.findElement(By.xpath(".//..")))
                 .findAny()
                 .get();
         banksDropDownField.click();
         for (String bankName : banks) {
             if (bankName != null) {
+                banksDropDownField.sendKeys(bankName);
                 WebElement bank = dropDownList.stream()
                         .filter(element -> element.getText().contains(bankName))
                         .findAny()
                         .get();
                 bank.click();
+                actions.moveToElement(bank);
             } else {
                 break;
             }

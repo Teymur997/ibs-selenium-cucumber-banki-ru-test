@@ -1,13 +1,12 @@
 package ru.ibs.framework.steps;
 
 import io.cucumber.java.ru.И;
-import org.openqa.selenium.NoSuchElementException;
 import ru.ibs.framework.managers.PageManager;
 import ru.ibs.framework.pages.DepositPage;
 
 import java.util.List;
 
-public class DepositPageStep {
+public class DepositPageSteps {
     PageManager pageManager = PageManager.getInstance();
 
     @И("Нажать кнопку настройки вклада")
